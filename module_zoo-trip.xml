@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_zoo-trip" default="compile.module.zoo-trip">
+  <dirname property="module.zoo-trip.basedir" file="${ant.file.module_zoo-trip}"/>
+  
+  <property name="module.jdk.home.zoo-trip" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.zoo-trip" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.zoo-trip" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.zoo-trip" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="zoo-trip.output.dir" value="${module.zoo-trip.basedir}/out/production/zoo-trip"/>
+  <property name="zoo-trip.testoutput.dir" value="${module.zoo-trip.basedir}/out/test/zoo-trip"/>
+  
+  <path id="zoo-trip.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="zoo-trip.module.production.classpath">
+    <path refid="${module.jdk.classpath.zoo-trip}"/>
+  </path>
+  
+  <path id="zoo-trip.runtime.production.module.classpath">
+    <pathelement location="${zoo-trip.output.dir}"/>
+  </path>
+  
+  <path id="zoo-trip.module.classpath">
+    <path refid="${module.jdk.classpath.zoo-trip}"/>
+    <pathelement location="${zoo-trip.output.dir}"/>
+  </path>
+  
+  <path id="zoo-trip.runtime.module.classpath">
+    <pathelement location="${zoo-trip.testoutput.dir}"/>
+    <pathelement location="${zoo-trip.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.zoo-trip">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.zoo-trip">
+    <patternset refid="excluded.from.module.zoo-trip"/>
+  </patternset>
+  
+  <path id="zoo-trip.module.sourcepath">
+    <dirset dir="${module.zoo-trip.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="zoo-trip.module.test.sourcepath">
+    <dirset dir="${module.zoo-trip.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.zoo-trip" depends="compile.module.zoo-trip.production,compile.module.zoo-trip.tests" description="Compile module zoo-trip"/>
+  
+  <target name="compile.module.zoo-trip.production" depends="register.custom.compilers" description="Compile module zoo-trip; production classes">
+    <mkdir dir="${zoo-trip.output.dir}"/>
+    <javac2 destdir="${zoo-trip.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.zoo-trip}/javac">
+      <compilerarg line="${compiler.args.zoo-trip}"/>
+      <bootclasspath refid="zoo-trip.module.bootclasspath"/>
+      <classpath refid="zoo-trip.module.production.classpath"/>
+      <src refid="zoo-trip.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.zoo-trip"/>
+    </javac2>
+    
+    <copy todir="${zoo-trip.output.dir}">
+      <fileset dir="${module.zoo-trip.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.zoo-trip.tests" depends="register.custom.compilers,compile.module.zoo-trip.production" description="compile module zoo-trip; test classes" unless="skip.tests">
+    <mkdir dir="${zoo-trip.testoutput.dir}"/>
+    <javac2 destdir="${zoo-trip.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.zoo-trip}/javac">
+      <compilerarg line="${compiler.args.zoo-trip}"/>
+      <bootclasspath refid="zoo-trip.module.bootclasspath"/>
+      <classpath refid="zoo-trip.module.classpath"/>
+      <src refid="zoo-trip.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.zoo-trip"/>
+    </javac2>
+    
+    <copy todir="${zoo-trip.testoutput.dir}">
+      <fileset dir="${module.zoo-trip.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.zoo-trip" description="cleanup module">
+    <delete dir="${zoo-trip.output.dir}"/>
+    <delete dir="${zoo-trip.testoutput.dir}"/>
+  </target>
+</project>
